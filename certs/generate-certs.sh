@@ -2,6 +2,7 @@
 
 set -e
 
+function gen_cert() {
 DOMAIN=$1
 shift
 SANS=$@
@@ -38,3 +39,6 @@ bosh interpolate creds.yml --path /ssl/private_key > key.pem
 openssl x509 -in cert.pem -text -noout
 
 rm -f creds.yml
+}
+
+gen_cert "dolanmbp.local" "*.dolanmbp.local" vault vault.dolanmbp.local concourse concourse.dolanmbp.local

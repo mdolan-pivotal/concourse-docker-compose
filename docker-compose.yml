@@ -2,6 +2,12 @@ version: '3'
 
 services:
   concourse-db:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U concourse_user -d concourse"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+      timeout: 2s
     image: postgres
     platform: linux/arm64
     volumes:
@@ -18,8 +24,10 @@ services:
     command: quickstart
     privileged: true
     depends_on:
-    - concourse-db
-    - vault
+      concourse-db:
+        condition: service_healthy
+      vault:
+        condition: service_healthy
     ports:
     - 9443:9443
     - 9391:9391
@@ -49,8 +57,29 @@ services:
       CONCOURSE_WORKER_BAGGAGECLAIM_DRIVER: overlay
       CONCOURSE_WORKER_RUNTIME: "houdini" #houdini on arm, containerd on x86
 
-  vault:
+  vault-init:
+    depends_on:
+     vault:
+       condition: service_healthy
     image: vault:1.13.3
+    restart: "no"
+    volumes:
+    - ./certs:/vault/certs
+    - ./vault:/vault/config
+    entrypoint: ["sh", "-c", "/vault/config/init-vault.sh"]
+
+
+  vault:
+    healthcheck:
+      #test: ["CMD", "openssl", "s_client", "-connect vault:8200"]
+      test: ls
+      interval: 2s
+      timeout: 2s
+      retries: 2
+      start_period: 10s
+    image: vault:1.13.3
+    environment:
+      VAULT_ADDR: "https://vault.dolanmbp.local:8200"
     cap_add:
     - IPC_LOCK
     ports:
