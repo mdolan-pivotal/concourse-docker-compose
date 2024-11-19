@@ -17,3 +17,20 @@ vault secrets enable -version=1 -path=concourse kv
 vault policy write concourse /vault/config/concourse-policy.hcl
 vault auth enable cert
 vault write auth/cert/certs/concourse policies=concourse certificate=@/vault/certs/ca.pem ttl=1h
+
+vault write concourse/homelab/ops_manager \
+  decryption_passphrase=@/vault/secrets/passphrase.txt \
+  fqdn="ops-manager.diggity00.net" \
+  password=@/vault/secrets/passphrase.txt \
+  user="admin"
+
+vault write concourse/homelab/tile_config \
+  pivnet_refresh_token=@/vault/secrets/pivnet.token \
+  scp_private_key=@/vault/secrets/ssh_private_key.pem \
+  tas_ssl_cert=@/vault/certs/cert.pem \
+  tas_ssl_key=@/vault/certs/key.pem
+
+vault write concourse/homelab/vcenter \
+  password=@/vault/secrets/passphrase.txt \
+  url="https://vc01.diggity00.net" \
+  user="administrator@diggity00.net"
