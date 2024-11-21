@@ -22,13 +22,22 @@ vault write concourse/homelab/ops_manager \
   decryption_passphrase=@/vault/secrets/passphrase.txt \
   fqdn="ops-manager.diggity00.net" \
   password=@/vault/secrets/passphrase.txt \
+  ssh_private_key=@/vault/secrets/ssh_private_key.pem
   user="admin"
 
 vault write concourse/homelab/tile_config \
+  credhub_internal_provider_keys=@/vault/secrets/credhub_provider_keys.txt \
   pivnet_refresh_token=@/vault/secrets/pivnet.token \
   scp_private_key=@/vault/secrets/ssh_private_key.pem \
+  tas_ssl_ca==@/vault/certs/ca.pem \
   tas_ssl_cert=@/vault/certs/cert.pem \
   tas_ssl_key=@/vault/certs/key.pem
+
+vault write concourse/homelab/scp \
+  host="pn50.diggity00.net" \
+  private_key=@/vault/secrets/ssh_private_key.pem \
+  user="mdolan"
+
 
 vault write concourse/homelab/vcenter \
   password=@/vault/secrets/passphrase.txt \

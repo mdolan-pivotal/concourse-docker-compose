@@ -41,4 +41,6 @@ openssl x509 -in cert.pem -text -noout
 rm -f creds.yml
 }
 
-gen_cert "dolanmbp.local" "*.dolanmbp.local" vault vault.dolanmbp.local concourse concourse.dolanmbp.local
+gen_cert "diggity00.net" "*.diggity00.net" vault vault.diggity00.net concourse concourse.diggity00.net \
+  "*.apps.diggity00.net" "*.sys.diggity00.net" "*.uaa.sys.diggity00.net" "*.login.sys.diggity00.net"
+   
