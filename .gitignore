@@ -3,3 +3,6 @@ cert.pem
 key.pem
 unseal-vault.sh
 database
+*.secret
+*.secrets
+secrets/*

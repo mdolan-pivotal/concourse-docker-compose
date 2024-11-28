@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 export VAULT_CACERT=/vault/certs/ca.pem
 export VAULT_ADDR=https://vault:8200
-vault operator init > /vault/config/init.txt
+vault operator init > /vault/config/init.secret
 
 UNSEAL_KEY_1="$(grep 'Unseal Key 1' /vault/config/init.txt | awk '{print $NF}')"
 UNSEAL_KEY_2="$(grep 'Unseal Key 2' /vault/config/init.txt | awk '{print $NF}')"
