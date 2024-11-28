@@ -33,6 +33,10 @@ vault write concourse/homelab/tile_config \
   tas_ssl_cert=@/vault/certs/cert.pem \
   tas_ssl_key=@/vault/certs/key.pem
 
+vault write concourse/homelab/nsx \
+  user="admin" \
+  password=@/vault/secrets/passphrase.txt 
+
 vault write concourse/homelab/scp \
   host="pn50.diggity00.net" \
   private_key=@/vault/secrets/ssh_private_key.pem \
@@ -40,6 +44,7 @@ vault write concourse/homelab/scp \
 
 
 vault write concourse/homelab/vcenter \
+  host=vc01.diggity00.net \
   password=@/vault/secrets/passphrase.txt \
   url="https://vc01.diggity00.net" \
   user="administrator@diggity00.net"
